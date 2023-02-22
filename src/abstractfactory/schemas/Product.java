@@ -7,6 +7,10 @@ public class Product {
     public Product() {
     }
 
+    public Product(String name) {
+        this.name = name;
+    }
+
     public Product(int id, String name) {
         this.id = id;
         this.name = name;

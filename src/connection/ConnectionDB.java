@@ -20,7 +20,11 @@ public class ConnectionDB {
         if (connection == null) {
             try {
                 Class.forName("org.postgresql.Driver");
-                connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/patron_fabrica_abstracta", "postgres", "aspirine");
+                connection = DriverManager.getConnection(
+                        "jdbc:postgresql://postgresql-arnolpacman123.alwaysdata.net:5432/arnolpacman123_patron_fabrica_abstracta",
+                        "arnolpacman123",
+                        "Aspirine217021220"
+                );
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
             }
@@ -46,7 +50,7 @@ public class ConnectionDB {
         ArrayList<Employee> employees = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
-            String query = "SELECT * FROM employees";
+            String query = "SELECT * FROM employees ORDER BY id DESC";
             var result = statement.executeQuery(query);
             while (result.next()) {
                 Employee employee = new Employee(
@@ -66,7 +70,7 @@ public class ConnectionDB {
         ArrayList<Product> products = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
-            String query = "SELECT * FROM products";
+            String query = "SELECT * FROM products ORDER BY id DESC";
             var result = statement.executeQuery(query);
             while (result.next()) {
                 Product product = new Product(
@@ -79,5 +83,27 @@ public class ConnectionDB {
             System.out.println("Error: " + e.getMessage());
         }
         return products;
+    }
+
+    public boolean addEmployee(Employee employee) {
+        try {
+            Statement statement = connection.createStatement();
+            String query = "INSERT INTO employees (name) VALUES ('" + employee.getName() + "')";
+            return statement.executeUpdate(query) > 0;
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean addProduct(Product product) {
+        try {
+            Statement statement = connection.createStatement();
+            String query = "INSERT INTO products (name) VALUES ('" + product.getName() + "')";
+            return statement.executeUpdate(query) > 0;
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return false;
     }
 }

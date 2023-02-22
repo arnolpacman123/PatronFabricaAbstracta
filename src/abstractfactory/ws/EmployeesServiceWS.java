@@ -1,16 +1,20 @@
 package abstractfactory.ws;
 
 import abstractfactory.schemas.Employee;
-import abstractfactory.service.IEmployeeService;
+import abstractfactory.services.IEmployeesService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmployeeServiceWS implements IEmployeeService {
+public class EmployeesServiceWS implements IEmployeesService {
+    static List<Employee> employees;
 
-    @Override
-    public List<Employee> getEmployees() {
-        ArrayList<Employee> employees = new ArrayList<>();
+    public EmployeesServiceWS() {
+        if (employees != null) {
+            return;
+        }
+
+        employees = new ArrayList<>();
         employees.add(new Employee(1, "Juana de Arco"));
         employees.add(new Employee(2, "Pablo Picasso"));
         employees.add(new Employee(3, "Albert Einstein"));
@@ -31,7 +35,26 @@ public class EmployeeServiceWS implements IEmployeeService {
         employees.add(new Employee(18, "Galileo Galilei"));
         employees.add(new Employee(19, "Benjamin Franklin"));
         employees.add(new Employee(20, "Alexander Graham Bell"));
-        return employees;
+    }
+
+
+    @Override
+    public List<Employee> getEmployees() {
+        ArrayList<Employee> reversedEmployees = new ArrayList<>();
+        reversedEmployees(reversedEmployees);
+        return reversedEmployees;
+    }
+
+    private void reversedEmployees(ArrayList<Employee> reversedEmployees) {
+        for (int i = employees.size() - 1; i >= 0; i--) {
+            reversedEmployees.add(employees.get(i));
+        }
+    }
+
+    @Override
+    public boolean addEmployee(Employee employee) {
+        employee.setId(employees.size() + 1);
+        return employees.add(employee);
     }
 
 }

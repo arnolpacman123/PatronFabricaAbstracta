@@ -1,14 +1,14 @@
 package abstractfactory.db;
 
-import abstractfactory.impl.IServiceStackAbstractFactory;
-import abstractfactory.service.IEmployeeService;
-import abstractfactory.service.IProductsService;
+import abstractfactory.interfaces.IServiceStackAbstractFactory;
+import abstractfactory.services.IEmployeesService;
+import abstractfactory.services.IProductsService;
 
 public class DBServiceStackFactory implements IServiceStackAbstractFactory {
 
     @Override
-    public IEmployeeService createEmployeeService() {
-        return new EmployeeServiceDB();
+    public IEmployeesService createEmployeesService() {
+        return new EmployeesServiceDB();
     }
 
     @Override

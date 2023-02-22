@@ -1,16 +1,21 @@
 package abstractfactory.ws;
 
 import abstractfactory.schemas.Product;
-import abstractfactory.service.IProductsService;
+import abstractfactory.services.IProductsService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductServiceWS implements IProductsService {
+    static ArrayList<Product> products;
 
-    @Override
-    public List<Product> getProducts() {
-        ArrayList<Product> products = new ArrayList<>();
+    public ProductServiceWS() {
+        if (products != null) {
+            return;
+        }
+
+        products = new ArrayList<>();
+
         products.add(new Product(1, "Coca Cola"));
         products.add(new Product(2, "Pepsi"));
         products.add(new Product(3, "Fanta"));
@@ -31,6 +36,25 @@ public class ProductServiceWS implements IProductsService {
         products.add(new Product(18, "Piano"));
         products.add(new Product(19, "Saxofon"));
         products.add(new Product(20, "Violin"));
-        return products;
+    }
+
+    @Override
+    public List<Product> getProducts() {
+        // Reverse the list
+        ArrayList<Product> reversedProducts = new ArrayList<>();
+        reversedProducts(reversedProducts);
+        return reversedProducts;
+    }
+
+    private void reversedProducts(ArrayList<Product> reversedProducts) {
+        for (int i = products.size() - 1; i >= 0; i--) {
+            reversedProducts.add(products.get(i));
+        }
+    }
+
+    @Override
+    public boolean addProduct(Product product) {
+        product.setId(products.size() + 1);
+        return products.add(product);
     }
 }

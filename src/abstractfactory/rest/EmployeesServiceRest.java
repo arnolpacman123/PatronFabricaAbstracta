@@ -1,7 +1,8 @@
 package abstractfactory.rest;
 
-import abstractfactory.schemas.Product;
-import abstractfactory.services.IProductsService;
+import abstractfactory.schemas.Employee;
+import abstractfactory.services.IEmployeesService;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -18,52 +19,53 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductServiceRest implements IProductsService {
+public class EmployeesServiceRest implements IEmployeesService {
 
     @Override
-    public List<Product> getProducts() {
-        ArrayList<Product> products = new ArrayList<>();
-        // Consume REST API con el link https://api-patron-fabrica-abstracta.herokuapp.com/api/products
+    public List<Employee> getEmployees() {
+        ArrayList<Employee> employees = new ArrayList<>();
+        // Consume REST API con el link https://api-patron-fabrica-abstracta.herokuapp.com/api/employees
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-            HttpGet httpGet = new HttpGet("https://api-patron-fabrica-abstracta.herokuapp.com/api/products");
+            HttpGet httpGet = new HttpGet("https://api-patron-fabrica-abstracta.herokuapp.com/api/employees");
             CloseableHttpResponse response = httpclient.execute(httpGet);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 InputStream inputStream = entity.getContent();
                 String result = new String(inputStream.readAllBytes());
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                Type listType = new TypeToken<List<Product>>() {
+                Type listType = new TypeToken<List<Employee>>() {
                 }.getType();
-                products = gson.fromJson(result, listType);
-                return products;
+                employees = gson.fromJson(result, listType);
+                return employees;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return products;
+        return employees;
     }
 
     @Override
-    public boolean addProduct(Product product) {
+    public boolean addEmployee(Employee employee) {
         boolean result = false;
-        // Consume REST API con el link https://api-patron-fabrica-abstracta.herokuapp.com/api/products enviar el producto en formato JSON por el método POST
+        // Consume REST API con el link https://api-patron-fabrica-abstracta.herokuapp.com/api/employees enviar el empleado en formato JSON por el método POST
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-            HttpPost httpPost = new HttpPost("https://api-patron-fabrica-abstracta.herokuapp.com/api/products");
+            HttpPost httpPost = new HttpPost("https://api-patron-fabrica-abstracta.herokuapp.com/api/employees");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String json = gson.toJson(product);
+            String json = gson.toJson(employee);
             httpPost.setEntity(new StringEntity(json));
             httpPost.setHeader("Accept", "application/json");
             httpPost.setHeader("Content-type", "application/json");
             CloseableHttpResponse response = httpclient.execute(httpPost);
             // Obtener el código de respuesta
             int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode == 200) {
+            if (statusCode == 200 || statusCode == 201) {
                 result = true;
             }
             // HttpEntity entity = response.getEntity();
             // if (entity != null) {
             //     InputStream inputStream = entity.getContent();
             //     String responseString = new String(inputStream.readAllBytes());
+            //     System.out.println(responseString);
             //     result = Boolean.parseBoolean(responseString);
             // }
         } catch (Exception e) {
